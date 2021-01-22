@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Provider as PaperProvider, DefaultTheme, TextInput, Button } from 'react-native-paper';
+import firebase from './firebase'
 
 const altura = Dimensions.get('screen').height
 
@@ -15,16 +16,30 @@ const theme = {
 };
 
 function App() {
+
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+
+  function login() {
+    const auth = firebase.auth().signInWithEmailAndPassword(email, senha)
+
+    auth.then(() => {
+      console.log("Sucesso!!!")
+    }).catch((erro) => {
+      console.log(erro)
+    })
+  }
+
   return (
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <StatusBar style="auto" backgroundColor="#0094FD" />
 
-        <TextInput style={styles.textInput} mode="outlined" label="Usuário" placeholder="Digite seu usuário" />
+        <TextInput onChangeText={(e) => setEmail(e)} style={styles.textInput} mode="outlined" label="Usuário" placeholder="Digite seu usuário" value={email} />
 
-        <TextInput style={styles.textInput} mode="outlined" label="Senha" placeholder="Digite sua senha" />
+        <TextInput onChangeText={(e) => setSenha(e)} style={styles.textInput} mode="outlined" secureTextEntry={true} label="Senha" placeholder="Digite sua senha" value={senha} />
 
-        <Button mode="contained" style={styles.button} onPress={() => console.log('Pressed')}>
+        <Button mode="contained" style={styles.button} onPress={() => login()}>
           Entrar
         </Button>
       </View>
