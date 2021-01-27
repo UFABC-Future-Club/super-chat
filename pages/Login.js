@@ -6,7 +6,7 @@ import firebase from '../firebase'
 
 const altura = Dimensions.get('screen').height
 
-function App() {
+function App({navigation}) {
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -16,6 +16,7 @@ function App() {
 
     auth.then(() => {
       console.log("Sucesso!!!")
+      navigation.navigate('Mensagens')
     }).catch((erro) => {
       console.log(erro)
     })
