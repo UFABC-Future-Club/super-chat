@@ -5,18 +5,26 @@ import firebase from '../firebase'
 
 const {width, height} = Dimensions.get('window')
 
-function Mensagens() {
+function Mensagens({route}) {
 
   const [msg, setMsg] = useState('')
   const [allMsg, setAllMsg] = useState([])
   const [email] = useState(firebase.auth().currentUser.email)
 
   const send = () => {
-    firebase.firestore().collection('conversas').add({
+
+    const msgTime = new Date().getTime()
+
+    firebase.firestore().collection('conversas').doc(route.params.id).collection('msg').add({
       mensagem: msg,
-      timestamp: new Date().getTime(),
+      timestamp: msgTime,
       author: email
     }).then(() => {
+      firebase.firestore().collection('conversas').doc(route.params.id).update({
+        lastMsg: msg,
+        lastMsgTime: msgTime
+      })
+
       console.log('Mensagem salva no banco de dados')
     }).catch((e) => {
       console.log(e)
@@ -24,7 +32,7 @@ function Mensagens() {
   }
 
   useEffect(() => {
-    firebase.firestore().collection('conversas').orderBy('timestamp').onSnapshot((valor) => {
+    firebase.firestore().collection('conversas').doc(route.params.id).collection('msg').orderBy('timestamp').onSnapshot((valor) => {
       const tmp = []
       valor.forEach((item) => {
 
@@ -33,6 +41,7 @@ function Mensagens() {
 
       setAllMsg(tmp)
     })
+
   }, [])
 
   const [scrollView, setScrollView] = useState()

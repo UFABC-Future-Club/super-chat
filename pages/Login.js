@@ -16,7 +16,7 @@ function App({navigation}) {
 
     auth.then(() => {
       console.log("Sucesso!!!")
-      navigation.navigate('Mensagens')
+      navigation.navigate('Conversas')
     }).catch((erro) => {
       console.log(erro)
     })
