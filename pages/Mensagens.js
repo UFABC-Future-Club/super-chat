@@ -5,7 +5,7 @@ import firebase from '../firebase'
 
 const {width, height} = Dimensions.get('window')
 
-function Mensagens({route}) {
+function Mensagens({route, navigation}) {
 
   const [msg, setMsg] = useState('')
   const [allMsg, setAllMsg] = useState([])
@@ -24,10 +24,6 @@ function Mensagens({route}) {
         lastMsg: msg,
         lastMsgTime: msgTime
       })
-
-      console.log('Mensagem salva no banco de dados')
-    }).catch((e) => {
-      console.log(e)
     })
   }
 
@@ -42,6 +38,10 @@ function Mensagens({route}) {
       setAllMsg(tmp)
     })
 
+    navigation.setOptions({
+      title: route.params.otherUser
+    })
+
   }, [])
 
   const [scrollView, setScrollView] = useState()
@@ -54,7 +54,7 @@ function Mensagens({route}) {
         onContentSizeChange={() => scrollView.scrollToEnd({animated: true})}
       >
         {allMsg.map((item, index) => (
-            <Text style={item.author === email? styles.fontSender : styles.fontReciver} key={String(item?.mensagem + index)}>            
+            <Text style={item.author === email? styles.fontSender : styles.fontReciver} key={index}>            
               {item?.mensagem}              
             </Text>
         ))}

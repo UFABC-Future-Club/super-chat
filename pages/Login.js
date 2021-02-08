@@ -15,10 +15,7 @@ function App({navigation}) {
     const auth = firebase.auth().signInWithEmailAndPassword(email, senha)
 
     auth.then(() => {
-      console.log("Sucesso!!!")
       navigation.navigate('Conversas')
-    }).catch((erro) => {
-      console.log(erro)
     })
   }
 

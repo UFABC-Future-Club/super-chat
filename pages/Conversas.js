@@ -24,7 +24,7 @@ function Mensagens({navigation}) {
         valor.forEach((item) => {
           const data = item.data();
           const otherUser = data.pessoas.filter((e) => e !== email);
-          console.log(item.data())
+
           tmp.push({
             id: item.id,
             otherUser: otherUser,
@@ -36,9 +36,10 @@ function Mensagens({navigation}) {
       });
   }, []);
 
-  const goMsg = (id) => {
+  const goMsg = (id, otherUser) => {
     navigation.navigate('Mensagens', {
-      id
+      id,
+      otherUser
     })
   }
 
@@ -46,7 +47,7 @@ function Mensagens({navigation}) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         {allChats.map((item, index) => (
-          <TouchableOpacity onPress={() => goMsg(item.id)} style={styles.chatView} key={String(item?.mensagem + index)}>
+          <TouchableOpacity onPress={() => goMsg(item.id, item.otherUser)} style={styles.chatView} key={index}>
             <Text style={styles.chatName}>{item?.otherUser}</Text>
             <Text style={styles.chatPreview}>{item?.lastMsg}</Text>
           </TouchableOpacity>
