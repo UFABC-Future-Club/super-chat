@@ -9,11 +9,13 @@ function Mensagens() {
 
   const [msg, setMsg] = useState('')
   const [allMsg, setAllMsg] = useState([])
+  const [email] = useState(firebase.auth().currentUser.email)
 
   const send = () => {
     firebase.firestore().collection('conversas').add({
       mensagem: msg,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      author: email
     }).then(() => {
       console.log('Mensagem salva no banco de dados')
     }).catch((e) => {
@@ -43,7 +45,9 @@ function Mensagens() {
         onContentSizeChange={() => scrollView.scrollToEnd({animated: true})}
       >
         {allMsg.map((item, index) => (
-          <Text style={styles.font} key={String(item?.mensagem + index)}>{item?.mensagem}</Text>
+            <Text style={item.author === email? styles.fontSender : styles.fontReciver} key={String(item?.mensagem + index)}>            
+              {item?.mensagem}              
+            </Text>
         ))}
       </ScrollView>
       <View style={styles.sendView}>
@@ -57,24 +61,34 @@ function Mensagens() {
 }
 
 
+const font = {
+  fontSize: 22,
+    margin: 16,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderStyle: 'solid',
+    padding: 12,
+}
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'flex-end',
-  }, 
-  font: {
-    fontSize: 22,
-    margin: 16,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderStyle: 'solid',
-    borderRadius: 12,
-    padding: 12,
+  },
+  fontReciver: {
+    ...font,
     alignSelf: 'flex-start',
     maxWidth: width * 0.65
   }, 
+  fontSender: {
+    ...font,
+    alignSelf: 'flex-end',
+    maxWidth: width * 0.65,
+    backgroundColor: 'rgb(0, 140, 255)',
+    color: '#fff',
+  },
   scrollView: {
     height: height * 0.9
   },
